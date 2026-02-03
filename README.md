@@ -1,2 +1,2 @@
 # Tumbling-Window
-Created a Tumbling WIndow Trigger in Azure Data Factory.
+Created a Tumbling Window Trigger in Azure Data Factory.
