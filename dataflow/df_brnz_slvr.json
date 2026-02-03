@@ -1,0 +1,464 @@
+{
+	"name": "df_brnz_slvr",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_cstmr",
+						"type": "DatasetReference"
+					},
+					"name": "srccustmrbrnz"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_campaigns",
+						"type": "DatasetReference"
+					},
+					"name": "srccamaignbrnz"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_dates",
+						"type": "DatasetReference"
+					},
+					"name": "srcdate"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_products",
+						"type": "DatasetReference"
+					},
+					"name": "srcprdcts"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_sales_denormalized",
+						"type": "DatasetReference"
+					},
+					"name": "srcsaldenorm"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_sales_normalized",
+						"type": "DatasetReference"
+					},
+					"name": "srcsalnorm"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_salespersons",
+						"type": "DatasetReference"
+					},
+					"name": "srcsalespersn"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_bronze_stores",
+						"type": "DatasetReference"
+					},
+					"name": "srcstores"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_customers",
+						"type": "DatasetReference"
+					},
+					"name": "sinkcustmrs"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_campaigns",
+						"type": "DatasetReference"
+					},
+					"name": "sinkcmpg"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_dates",
+						"type": "DatasetReference"
+					},
+					"name": "sinkdate"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_products",
+						"type": "DatasetReference"
+					},
+					"name": "sinkprdcts"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_sales_denormalized",
+						"type": "DatasetReference"
+					},
+					"name": "sinksalesdenorm"
+				},
+				{
+					"dataset": {
+						"referenceName": "SqlServerTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sinksalesnorm"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_salespersons",
+						"type": "DatasetReference"
+					},
+					"name": "sinksalesperson"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_stores",
+						"type": "DatasetReference"
+					},
+					"name": "sinkstores"
+				}
+			],
+			"transformations": [
+				{
+					"name": "drcstmr"
+				},
+				{
+					"name": "slctcustmr"
+				},
+				{
+					"name": "drcampn"
+				},
+				{
+					"name": "slctcampn"
+				},
+				{
+					"name": "drdate"
+				},
+				{
+					"name": "drprdts"
+				},
+				{
+					"name": "drsalesdenorm"
+				},
+				{
+					"name": "drsalesnorm"
+				},
+				{
+					"name": "drsalespersn"
+				},
+				{
+					"name": "drstores"
+				},
+				{
+					"name": "castdate"
+				},
+				{
+					"name": "castsaleid"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          customer_sk as integer,",
+				"          customer_id as string,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          email as string,",
+				"          residential_location as string,",
+				"          customer_segment as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srccustmrbrnz",
+				"source(output(",
+				"          campaign_sk as short,",
+				"          campaign_id as string,",
+				"          campaign_name as string,",
+				"          start_date_sk as string,",
+				"          end_date_sk as string,",
+				"          campaign_budget as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srccamaignbrnz",
+				"source(output(",
+				"          full_date as date,",
+				"          date_sk as integer,",
+				"          year as date,",
+				"          month as integer,",
+				"          day as integer,",
+				"          weekday as integer,",
+				"          quarter as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srcdate",
+				"source(output(",
+				"          product_sk as short,",
+				"          product_id as string,",
+				"          product_name as string,",
+				"          category as string,",
+				"          brand as string,",
+				"          origin_location as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srcprdcts",
+				"source(output(",
+				"          sales_sk as short,",
+				"          sales_id as string,",
+				"          customer_sk as integer,",
+				"          product_sk as short,",
+				"          store_sk as integer,",
+				"          salesperson_sk as integer,",
+				"          campaign_sk as short,",
+				"          sales_date as date 'dd-MM-yyyy',",
+				"          total_amount as double,",
+				"          customer_segment as string,",
+				"          category as string,",
+				"          store_type as string,",
+				"          store_location as string,",
+				"          campaign_name as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srcsaldenorm",
+				"source(output(",
+				"          sales_sk as short,",
+				"          sales_id as string,",
+				"          customer_sk as integer,",
+				"          product_sk as short,",
+				"          store_sk as short,",
+				"          salesperson_sk as short,",
+				"          campaign_sk as short,",
+				"          sales_date as date,",
+				"          total_amount as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srcsalnorm",
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     partitionBy('hash', 1)) ~> srcsalespersn",
+				"source(output(",
+				"          store_sk as short,",
+				"          store_id as string,",
+				"          store_name as string,",
+				"          store_type as string,",
+				"          store_location as string,",
+				"          store_manager_sk as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> srcstores",
+				"srccustmrbrnz derive(UpdateTimeStamp = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> drcstmr",
+				"drcstmr select(mapColumn(",
+				"          customer_sk,",
+				"          customer_id,",
+				"          first_name,",
+				"          last_name,",
+				"          email,",
+				"          residential_location,",
+				"          customer_segment,",
+				"          UpdateTimeStamp",
+				"     ),",
+				"     partitionBy('hash', 1),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> slctcustmr",
+				"srccamaignbrnz derive(UpdateTimeStamp = currentUTC()) ~> drcampn",
+				"drcampn select(mapColumn(",
+				"          campaign_sk,",
+				"          campaign_id,",
+				"          campaign_name,",
+				"          start_date_sk,",
+				"          end_date_sk,",
+				"          campaign_budget,",
+				"          UpdatedTimeStamp = UpdateTimeStamp",
+				"     ),",
+				"     partitionBy('hash', 1),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> slctcampn",
+				"srcdate derive(UpdateTimeStamp = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> drdate",
+				"srcprdcts derive(UpdateTimeStamp = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> drprdts",
+				"srcsaldenorm derive(UpdateTimeStamp = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> drsalesdenorm",
+				"srcsalnorm derive(UpdateTimeStamp = currentUTC(),",
+				"          sales_id = toString(sales_id),",
+				"     partitionBy('hash', 1)) ~> drsalesnorm",
+				"srcsalespersn derive(UpdateTimeStamp = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> drsalespersn",
+				"srcstores derive(UpdateTimeStamp = currentUTC(),",
+				"     partitionBy('hash', 1)) ~> drstores",
+				"drsalesnorm cast(output(",
+				"          sales_date as date 'dd-MM-yyyy'",
+				"     ),",
+				"     errors: true) ~> castdate",
+				"castdate cast(output(",
+				"          sales_id as string",
+				"     ),",
+				"     errors: true) ~> castsaleid",
+				"slctcustmr sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['Customers'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkcustmrs",
+				"slctcampn sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          campaign_sk as string,",
+				"          campaign_id as string,",
+				"          campaign_name as string,",
+				"          start_date_sk as string,",
+				"          end_date_sk as string,",
+				"          campaign_budget as string,",
+				"          UpdatedTimeStamp as timestamp",
+				"     ),",
+				"     format: 'parquet',",
+				"     partitionFileNames:['campaign'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkcmpg",
+				"drdate sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          full_date as date,",
+				"          date_sk as integer,",
+				"          year as date,",
+				"          month as integer,",
+				"          day as integer,",
+				"          weekday as integer,",
+				"          quarter as integer,",
+				"          UpdateTimeStamp as timestamp",
+				"     ),",
+				"     format: 'parquet',",
+				"     partitionFileNames:['date'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkdate",
+				"drprdts sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          product_sk as short,",
+				"          product_id as string,",
+				"          product_name as string,",
+				"          category as string,",
+				"          brand as string,",
+				"          origin_location as string,",
+				"          UpdateTimeStamp as timestamp",
+				"     ),",
+				"     format: 'parquet',",
+				"     partitionFileNames:['Products'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkprdcts",
+				"drsalesdenorm sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['salesdenorm'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinksalesdenorm",
+				"castsaleid sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     input(",
+				"          Sales_sk as integer,",
+				"          Sales_id as string,",
+				"          customer_sk as integer,",
+				"          Product_sk as integer,",
+				"          Store_sk as integer,",
+				"          salesperson_sk as integer,",
+				"          campaign_sk as integer,",
+				"          sales_date as timestamp,",
+				"          Total_Amount as decimal(18,2),",
+				"          LoadTimestamp as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          Sales_sk = sales_sk,",
+				"          Sales_id = sales_id,",
+				"          customer_sk,",
+				"          Product_sk = product_sk,",
+				"          Store_sk = store_sk,",
+				"          salesperson_sk,",
+				"          campaign_sk,",
+				"          sales_date,",
+				"          Total_Amount = total_amount,",
+				"          LoadTimestamp = UpdateTimeStamp",
+				"     ),",
+				"     partitionBy('hash', 1),",
+				"     preCommands: [],",
+				"     postCommands: []) ~> sinksalesnorm",
+				"drsalespersn sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['SalesPerson'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinksalesperson",
+				"drstores sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     input(",
+				"          store_sk as short,",
+				"          store_id as string,",
+				"          store_name as string,",
+				"          store_type as string,",
+				"          store_location as string,",
+				"          store_manager_sk as short,",
+				"          UpdateTimeStamp as timestamp",
+				"     ),",
+				"     format: 'parquet',",
+				"     partitionFileNames:['Stores'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkstores"
+			]
+		}
+	}
+}

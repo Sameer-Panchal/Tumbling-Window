@@ -1,0 +1,61 @@
+{
+	"name": "ds_SQL_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob_demo",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"pSourceFilename": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ds_Bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().pSourceFilename",
+					"type": "Expression"
+				},
+				"folderPath": "SQL_Synapse_Demo",
+				"container": "rawfiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "campaign_sk",
+				"type": "String"
+			},
+			{
+				"name": "campaign_id",
+				"type": "String"
+			},
+			{
+				"name": "campaign_name",
+				"type": "String"
+			},
+			{
+				"name": "start_date_sk",
+				"type": "String"
+			},
+			{
+				"name": "end_date_sk",
+				"type": "String"
+			},
+			{
+				"name": "campaign_budget",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

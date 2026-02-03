@@ -1,0 +1,85 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_sales_normalized",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_silver_stores",
+						"type": "DatasetReference"
+					},
+					"name": "str"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "test",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          sales_sk as short,",
+				"          sales_id as string,",
+				"          customer_sk as integer,",
+				"          product_sk as short,",
+				"          store_sk as short,",
+				"          salesperson_sk as short,",
+				"          campaign_sk as short,",
+				"          sales_date as string,",
+				"          total_amount as double,",
+				"          UpdateTimeStamp as timestamp",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     partitionBy('hash', 1)) ~> source1",
+				"source(output(",
+				"          store_sk as short,",
+				"          store_id as string,",
+				"          store_name as string,",
+				"          store_type as string,",
+				"          store_location as string,",
+				"          store_manager_sk as short,",
+				"          UpdateTimeStamp as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet') ~> str",
+				"source1, str join(source1@store_sk == str@store_sk,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     partitionBy('hash', 1),",
+				"     broadcast: 'auto')~> join1",
+				"join1 sink(allowSchemaDrift: true,",
+				"     validateSchema: true,",
+				"     partitionFileNames:['sales'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

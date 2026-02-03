@@ -1,0 +1,82 @@
+{
+	"name": "dataflow4",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_silver_sales_normalized",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable2",
+						"type": "DatasetReference"
+					},
+					"name": "sink1",
+					"rejectedDataLinkedService": {
+						"referenceName": "AzureDataLakeStorage1",
+						"type": "LinkedServiceReference"
+					}
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          sales_sk as short,",
+				"          sales_id as string,",
+				"          customer_sk as integer,",
+				"          product_sk as short,",
+				"          store_sk as short,",
+				"          salesperson_sk as short,",
+				"          campaign_sk as short,",
+				"          sales_date as date,",
+				"          total_amount as double,",
+				"          UpdateTimeStamp as timestamp",
+				"     ),",
+				"     allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'parquet',",
+				"     partitionBy('hash', 1)) ~> source1",
+				"source1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          customer_sk as integer,",
+				"          customer_id as string,",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          email as string,",
+				"          residential_location as string,",
+				"          customer_segment as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          Sales_sk = sales_sk,",
+				"          Sales_id = sales_id,",
+				"          customer_sk,",
+				"          Product_sk = product_sk,",
+				"          Store_sk = store_sk,",
+				"          salesperson_sk,",
+				"          campaign_sk,",
+				"          sales_date,",
+				"          Total_Amount = total_amount,",
+				"          LoadTimestamp = UpdateTimeStamp",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> sink1"
+			]
+		}
+	}
+}

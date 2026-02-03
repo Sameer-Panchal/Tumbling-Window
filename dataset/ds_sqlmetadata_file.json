@@ -1,0 +1,54 @@
+{
+	"name": "ds_sqlmetadata_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob_demo",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "file_metadata.csv",
+				"folderPath": "SQL_Synapse_Demo",
+				"container": "rawfiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "EntityName",
+				"type": "String"
+			},
+			{
+				"name": "FileName",
+				"type": "String"
+			},
+			{
+				"name": "SourceFolder",
+				"type": "String"
+			},
+			{
+				"name": "SilverFolder",
+				"type": "String"
+			},
+			{
+				"name": "TargetTable",
+				"type": "String"
+			},
+			{
+				"name": "LoadType",
+				"type": "String"
+			},
+			{
+				"name": "Flag",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

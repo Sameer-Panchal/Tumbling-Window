@@ -1,0 +1,54 @@
+{
+	"name": "ds_silver_campaigns",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Silver"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "campaign",
+				"folderPath": "silver",
+				"fileSystem": "sqldltest"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "campaign_sk",
+				"type": "UTF8"
+			},
+			{
+				"name": "campaign_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "campaign_name",
+				"type": "UTF8"
+			},
+			{
+				"name": "start_date_sk",
+				"type": "UTF8"
+			},
+			{
+				"name": "end_date_sk",
+				"type": "UTF8"
+			},
+			{
+				"name": "campaign_budget",
+				"type": "UTF8"
+			},
+			{
+				"name": "UpdatedTimeStamp",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

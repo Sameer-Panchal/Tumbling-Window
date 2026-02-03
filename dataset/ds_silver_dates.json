@@ -1,0 +1,58 @@
+{
+	"name": "ds_silver_dates",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Silver"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "date",
+				"folderPath": "silver",
+				"fileSystem": "sqldltest"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "full_date",
+				"type": "DATE"
+			},
+			{
+				"name": "date_sk",
+				"type": "INT32"
+			},
+			{
+				"name": "year",
+				"type": "DATE"
+			},
+			{
+				"name": "month",
+				"type": "INT32"
+			},
+			{
+				"name": "day",
+				"type": "INT32"
+			},
+			{
+				"name": "weekday",
+				"type": "INT32"
+			},
+			{
+				"name": "quarter",
+				"type": "INT32"
+			},
+			{
+				"name": "UpdateTimeStamp",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

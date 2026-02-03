@@ -1,0 +1,54 @@
+{
+	"name": "ds_silver_stores",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Silver"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Stores",
+				"folderPath": "silver",
+				"fileSystem": "sqldltest"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "store_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "store_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "store_name",
+				"type": "UTF8"
+			},
+			{
+				"name": "store_type",
+				"type": "UTF8"
+			},
+			{
+				"name": "store_location",
+				"type": "UTF8"
+			},
+			{
+				"name": "store_manager_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "UpdateTimeStamp",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

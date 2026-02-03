@@ -1,0 +1,66 @@
+{
+	"name": "ds_silver_sales_normalized",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Silver"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "Salesnorm",
+				"folderPath": "silver",
+				"fileSystem": "sqldltest"
+			},
+			"compressionCodec": "none"
+		},
+		"schema": [
+			{
+				"name": "sales_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "sales_id",
+				"type": "UTF8"
+			},
+			{
+				"name": "customer_sk",
+				"type": "INT32"
+			},
+			{
+				"name": "product_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "store_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "salesperson_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "campaign_sk",
+				"type": "INT_16"
+			},
+			{
+				"name": "sales_date",
+				"type": "DATE"
+			},
+			{
+				"name": "total_amount",
+				"type": "DOUBLE"
+			},
+			{
+				"name": "UpdateTimeStamp",
+				"type": "INT96"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

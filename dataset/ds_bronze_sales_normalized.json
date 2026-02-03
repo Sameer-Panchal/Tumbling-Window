@@ -1,0 +1,68 @@
+{
+	"name": "ds_bronze_sales_normalized",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sales_normalized.csv",
+				"folderPath": {
+					"value": "bronze",
+					"type": "Expression"
+				},
+				"fileSystem": "sqldltest"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\"",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "sales_sk",
+				"type": "String"
+			},
+			{
+				"name": "sales_id",
+				"type": "String"
+			},
+			{
+				"name": "customer_sk",
+				"type": "String"
+			},
+			{
+				"name": "product_sk",
+				"type": "String"
+			},
+			{
+				"name": "store_sk",
+				"type": "String"
+			},
+			{
+				"name": "salesperson_sk",
+				"type": "String"
+			},
+			{
+				"name": "campaign_sk",
+				"type": "String"
+			},
+			{
+				"name": "sales_date",
+				"type": "String"
+			},
+			{
+				"name": "total_amount",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

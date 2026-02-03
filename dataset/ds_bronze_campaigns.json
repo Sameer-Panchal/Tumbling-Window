@@ -1,0 +1,56 @@
+{
+	"name": "ds_bronze_campaigns",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "ds_Bronze"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "campaigns.csv",
+				"folderPath": {
+					"value": "bronze",
+					"type": "Expression"
+				},
+				"fileSystem": "sqldltest"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "campaign_sk",
+				"type": "String"
+			},
+			{
+				"name": "campaign_id",
+				"type": "String"
+			},
+			{
+				"name": "campaign_name",
+				"type": "String"
+			},
+			{
+				"name": "start_date_sk",
+				"type": "String"
+			},
+			{
+				"name": "end_date_sk",
+				"type": "String"
+			},
+			{
+				"name": "campaign_budget",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

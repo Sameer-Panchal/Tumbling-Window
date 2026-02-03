@@ -1,0 +1,68 @@
+{
+	"name": "SqlServerTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SqlServer1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "Sales_sk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Sales_id",
+				"type": "varchar"
+			},
+			{
+				"name": "customer_sk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Product_sk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Store_sk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "salesperson_sk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "campaign_sk",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "sales_date",
+				"type": "datetime2",
+				"scale": 7
+			},
+			{
+				"name": "Total_Amount",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 2
+			},
+			{
+				"name": "LoadTimestamp",
+				"type": "datetime2",
+				"scale": 7
+			}
+		],
+		"typeProperties": {
+			"schema": "stg",
+			"table": "fact_Sales"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
